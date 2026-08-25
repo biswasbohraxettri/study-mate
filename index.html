@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>STUDY MATE — AI Personal Teacher & Learning Operating System</title>
+  <meta name="description" content="STUDY MATE - AI-Powered Personal Teacher for Smart India Hackathon. Closing personalized learning gaps with real-time AI doubt solving, adaptive study planning, dynamic quiz engine, and exam readiness analytics." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- FontAwesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- KaTeX for Beautiful LaTeX Math Rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
+  <!-- Marked.js for Markdown & Chart.js & Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Ambient background glow elements -->
+  <div class="ambient-glow orb-1"></div>
+  <div class="ambient-glow orb-2"></div>
+
+  <!-- Top Announcement Bar -->
+  <aside class="top-announcement-bar" aria-label="Hackathon Context">
+    <div class="announcement-content">
+      <span class="badge-sih-gold"><i class="fa-solid fa-trophy"></i> SMART INDIA HACKATHON</span>
+      <span>Problem Statement: <strong>SIH26201 — Student Innovation (Smart Education)</strong></span>
+      <span class="badge-team"><i class="fa-solid fa-users"></i> Team: <strong>Tech Titans</strong></span>
+      <span class="badge-gemini" id="api-status-badge" onclick="app.configureApiKey()" title="Click to configure Gemini API Key">
+        <i class="fa-solid fa-bolt"></i> Gemini AI: <strong id="api-status-text">Connected</strong>
+      </span>
+    </div>
+  </aside>
+
+  <!-- Navigation Header -->
+  <header class="navbar-header">
+    <div class="navbar-container">
+      <div class="navbar-brand" onclick="app.switchTab('home')">
+        <div class="brand-logo-icon">
+          <i class="fa-solid fa-brain"></i>
+          <span class="logo-sparkle"></span>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">STUDY<span class="gradient-text">MATE</span></span>
+          <span class="brand-tagline">AI Personal Teacher</span>
+        </div>
+      </div>
+
+      <!-- Main Navigation Menu -->
+      <nav class="nav-links-menu" id="nav-menu">
+        <button class="nav-btn active" data-tab="home" onclick="app.switchTab('home')">
+          <i class="fa-solid fa-house"></i> <span>Home</span>
+        </button>
+        <button class="nav-btn" data-tab="dashboard" onclick="app.switchTab('dashboard')">
+          <i class="fa-solid fa-chart-pie"></i> <span>Dashboard</span>
+        </button>
+        <button class="nav-btn" data-tab="ai-tutor" onclick="app.switchTab('ai-tutor')">
+          <i class="fa-solid fa-robot"></i> <span>AI Doubt Solver</span>
+          <span class="live-pill">Live AI</span>
+        </button>
+        <button class="nav-btn" data-tab="planner" onclick="app.switchTab('planner')">
+          <i class="fa-solid fa-calendar-check"></i> <span>Study Planner</span>
+        </button>
+        <button class="nav-btn" data-tab="flashcards" onclick="app.switchTab('flashcards')">
+          <i class="fa-solid fa-clone"></i> <span>Flashcards</span>
+        </button>
+        <button class="nav-btn" data-tab="formulas" onclick="app.switchTab('formulas')">
+          <i class="fa-solid fa-square-root-variable"></i> <span>Formula Vault</span>
+        </button>
+        <button class="nav-btn" data-tab="stress-relief" onclick="app.switchTab('stress-relief')">
+          <i class="fa-solid fa-spa text-emerald"></i> <span>Stress Relief</span>
+        </button>
+        <button class="nav-btn" data-tab="readiness" onclick="app.switchTab('readiness')">
+          <i class="fa-solid fa-bullseye"></i> <span>Exam Readiness</span>
+          <span class="badge-readiness-nav" id="nav-readiness-indicator">85%</span>
+        </button>
+      </nav>
+
+      <!-- Right Header Actions -->
+      <div class="navbar-actions">
+        <!-- Study Streak -->
+        <div class="streak-pill" title="Current Active Study Streak">
+          <i class="fa-solid fa-fire fire-pulse"></i>
+          <span id="streak-counter">7</span> <span class="streak-lbl">Days</span>
+        </div>
+
+        <!-- Audio SFX Toggle -->
+        <button class="icon-action-btn" id="sfx-btn" onclick="app.toggleSFX()" title="Toggle Sound Feedback">
+          <i class="fa-solid fa-volume-high" id="sfx-icon"></i>
+        </button>
+
+        <!-- Dark/Light Mode Switch -->
+        <button class="icon-action-btn" id="theme-btn" onclick="app.toggleTheme()" title="Toggle Dark/Light Theme">
+          <i class="fa-solid fa-moon" id="theme-icon"></i>
+        </button>
+
+        <!-- Quick Ask CTA -->
+        <button class="btn-primary-header" onclick="app.switchTab('ai-tutor')">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> Ask Doubt
+        </button>
+
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-menu-btn" onclick="app.toggleMobileMenu()" aria-label="Toggle navigation">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- MAIN APPLICATION CONTENT AREA -->
+  <!-- ========================================================================= -->
+  <main class="main-wrapper">
+
+    <!-- ========================================================================= -->
+    <!-- MODULE 1: HOME & PLATFORM OVERVIEW -->
+    <!-- ========================================================================= -->
+    <section id="tab-home" class="tab-pane active">
+      <!-- Hero Banner -->
+      <div class="hero-block">
+        <div class="hero-tag-badge">
+          <i class="fa-solid fa-award"></i> Smart India Hackathon Student Innovation
+        </div>
+        <h1 class="hero-heading">
+          Your AI-Powered <br />
+          <span class="gradient-text">Personal Teacher</span>
+        </h1>
+        <p class="hero-lead">
+          Eliminating the personalized learning gap with real-time AI doubt solving, adaptive weekly study plans, intelligent topic quizzes, and predictive exam readiness scoring.
+        </p>
+
+        <!-- 3 Core Action Buttons -->
+        <div class="hero-actions-group">
+          <button class="btn-hero-primary" onclick="app.switchTab('dashboard')">
+            <i class="fa-solid fa-graduation-cap"></i> Start Learning
+          </button>
+          <button class="btn-hero-secondary" onclick="app.switchTab('ai-tutor')">
+            <i class="fa-solid fa-comments"></i> Ask a Doubt
+          </button>
+          <button class="btn-hero-accent" onclick="app.switchTab('planner')">
+            <i class="fa-solid fa-calendar-plus"></i> Create Study Plan
+          </button>
+        </div>
+
+        <!-- Metric Highlight Bubbles -->
+        <div class="hero-stats-row">
+          <div class="stat-card">
+            <div class="stat-big-val gradient-text">85%+</div>
+            <div class="stat-sub-lbl">Predictive Exam Readiness</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-big-val">59%</div>
+            <div class="stat-sub-lbl">Performance Gain (2024 Study)</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-big-val gradient-text">24/7</div>
+            <div class="stat-sub-lbl">Instant Doubt Solving</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-big-val">36%</div>
+            <div class="stat-sub-lbl">Higher Study Engagement</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Problem vs Solution Matrix -->
+      <div class="content-section">
+        <div class="section-title-wrap text-center">
+          <span class="section-kicker">ADDRESSING CORE STUDENT CHALLENGES</span>
+          <h2 class="section-heading">The Student Problem &rarr; Our AI Solution</h2>
+          <p class="section-subtext">Traditional one-size-fits-all education leaves millions of students struggling in silence.</p>
+        </div>
+
+        <div class="ps-grid-layout">
+          <!-- Item 1 -->
+          <div class="ps-matrix-card">
+            <div class="ps-side-box problem">
+              <div class="ps-header"><i class="fa-solid fa-triangle-exclamation"></i> Personalized Learning Gap</div>
+              <p>Fixed classroom pace leaves slower learners behind while fast learners get bored.</p>
+            </div>
+            <div class="ps-arrow-divider"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="ps-side-box solution">
+              <div class="ps-header"><i class="fa-solid fa-circle-check"></i> Adaptive Learning Path</div>
+              <p>Dynamic difficulty adjustment and custom learning loops tailored to individual student speeds.</p>
+            </div>
+          </div>
+
+          <!-- Item 2 -->
+          <div class="ps-matrix-card">
+            <div class="ps-side-box problem">
+              <div class="ps-header"><i class="fa-solid fa-book-skull"></i> Difficult Subjects & Concepts</div>
+              <p>Complex formulas in Physics, Chemistry, and Math cause anxiety and lack intuitive step-by-step clarity.</p>
+            </div>
+            <div class="ps-arrow-divider"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="ps-side-box solution">
+              <div class="ps-header"><i class="fa-solid fa-lightbulb"></i> Explain Like I'm 10 & Proofs</div>
+              <p>AI simplifies abstract topics using visual analogies, first-principles logic, and audio explanations.</p>
+            </div>
+          </div>
+
+          <!-- Item 3 -->
+          <div class="ps-matrix-card">
+            <div class="ps-side-box problem">
+              <div class="ps-header"><i class="fa-solid fa-clock-rotate-left"></i> Lack of Instant Doubt Solving</div>
+              <p>Late-night study doubts remain unresolved for days, breaking momentum and lowering confidence.</p>
+            </div>
+            <div class="ps-arrow-divider"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="ps-side-box solution">
+              <div class="ps-header"><i class="fa-solid fa-bolt"></i> 24/7 AI Doubt Solver</div>
+              <p>Instant answers in seconds with derivations, formula cards, and interactive voice support.</p>
+            </div>
+          </div>
+
+          <!-- Item 4 -->
+          <div class="ps-matrix-card">
+            <div class="ps-side-box problem">
+              <div class="ps-header"><i class="fa-solid fa-calendar-xmark"></i> Poor Study Planning & Exam Stress</div>
+              <p>Overwhelming syllabi lead to procrastination, cramming, burnout, and fear of exam day.</p>
+            </div>
+            <div class="ps-arrow-divider"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="ps-side-box solution">
+              <div class="ps-header"><i class="fa-solid fa-chart-line"></i> Smart Planner & Readiness Index</div>
+              <p>Automated timetable generator with Pomodoro timers and predictive scores that tell you exactly what to revise.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 8-Step Adaptive Workflow -->
+      <div class="content-section">
+        <div class="section-title-wrap text-center">
+          <span class="section-kicker">AUTONOMOUS WORKFLOW</span>
+          <h2 class="section-heading">How StudyMate Works End-to-End</h2>
+          <p class="section-subtext">A continuous feedback loop designed to move students from diagnostic baseline to 85%+ exam mastery.</p>
+        </div>
+
+        <div class="workflow-grid">
+          <div class="workflow-card active" onclick="app.setWorkflowStep(1)">
+            <span class="wf-step-num">01</span>
+            <i class="fa-solid fa-user-graduate wf-icon"></i>
+            <h4>Student Input</h4>
+            <p>Target exam & available study hours.</p>
+          </div>
+          <div class="workflow-card" onclick="app.setWorkflowStep(2)">
+            <span class="wf-step-num">02</span>
+            <i class="fa-solid fa-file-signature wf-icon"></i>
+            <h4>Assessment</h4>
+            <p>Quick baseline diagnostic quizzes.</p>
+          </div>
+          <div class="workflow-card" onclick="app.setWorkflowStep(3)">
+            <span class="wf-step-num">03</span>
+            <i class="fa-solid fa-brain wf-icon"></i>
+            <h4>AI Gap Analysis</h4>
+            <p>Detects exact weak topics.</p>
+          </div>
+          <div class="workflow-card" onclick="app.setWorkflowStep(4)">
+            <span class="wf-step-num">04</span>
+            <i class="fa-solid fa-calendar-days wf-icon"></i>
+            <h4>Smart Plan</h4>
+            <p>Generates adaptive timetable.</p>
+          </div>
+          <div class="workflow-card" onclick="app.setWorkflowStep(5)">
+            <span class="wf-step-num">05</span>
+            <i class="fa-solid fa-robot wf-icon"></i>
+            <h4>Doubt Solver</h4>
+            <p>Solves academic roadblocks 24/7.</p>
+          </div>
+          <div class="workflow-card" onclick="app.setWorkflowStep(6)">
+            <span class="wf-step-num">06</span>
+            <i class="fa-solid fa-list-check wf-icon"></i>
+            <h4>Practice Quiz</h4>
+            <p>Calibrates difficulty dynamically.</p>
+          </div>
+          <div class="workflow-card" onclick="app.setWorkflowStep(7)">
+            <span class="wf-step-num">07</span>
+            <i class="fa-solid fa-chart-simple wf-icon"></i>
+            <h4>Progress Track</h4>
+            <p>Real-time scores & streak tracking.</p>
+          </div>
+          <div class="workflow-card" onclick="app.setWorkflowStep(8)">
+            <span class="wf-step-num">08</span>
+            <i class="fa-solid fa-award wf-icon"></i>
+            <h4>Exam Readiness</h4>
+            <p>Predictive score & distinction tips.</p>
+          </div>
+        </div>
+
+        <div class="workflow-details-panel" id="workflow-details-box">
+          <span class="wf-step-tag"><i class="fa-solid fa-circle-info"></i> ACTIVE WORKFLOW STAGE</span>
+          <h3 id="wf-active-title">Stage 1: Student Input & Profile Setup</h3>
+          <p id="wf-active-desc">The student inputs their target examination (e.g. CBSE 12th, JEE, NEET, University Finals), current syllabus completion, and daily available study hours. StudyMate initializes a personalized student neural profile.</p>
+          <div class="wf-actions">
+            <button class="btn-primary-sm" onclick="app.switchTab('dashboard')">View Live Dashboard</button>
+            <button class="btn-secondary-sm" onclick="app.switchTab('readiness')">Run Mock Assessment</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Research Reference Banner -->
+      <div class="research-citation-card">
+        <div class="citation-header">
+          <i class="fa-solid fa-flask text-emerald"></i>
+          <span>Grounded in Peer-Reviewed Educational Research</span>
+        </div>
+        <h3>Backed by 2024 Meta-Analysis on Adaptive AI Learning</h3>
+        <p>
+          A 2024 comprehensive review of 69 international studies demonstrated that <strong>59% of students experienced significant academic performance gains</strong> and <strong>36% showed marked increases in active engagement</strong> when using individualized adaptive AI loops.
+        </p>
+        <a href="https://www.sciencedirect.com/science/article/pii/S2405844024156617" target="_blank" rel="noopener" class="citation-link">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> ScienceDirect Study Reference (2024)
+        </a>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- MODULE 2: STUDENT DASHBOARD -->
+    <!-- ========================================================================= -->
+    <section id="tab-dashboard" class="tab-pane">
+      <div class="page-header-row">
+        <div>
+          <h1 class="page-heading"><i class="fa-solid fa-chart-pie gradient-text"></i> Student Dashboard</h1>
+          <p class="page-subheading">Centralized tracking for real-time progress, weak topic highlights, and critical exam countdowns.</p>
+        </div>
+        <div class="student-badge-chip">
+          <div class="avatar-box"><i class="fa-solid fa-user-graduate"></i></div>
+          <div>
+            <div class="student-name-text">Aarav Sharma</div>
+            <div class="student-stream-text">Class 12 • Science Stream (PCM)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Summary Metrics Grid -->
+      <div class="summary-metrics-grid">
+        <!-- Card 1: Learning Score -->
+        <div class="summary-card glow-card">
+          <div class="card-top-row">
+            <span class="card-title-lbl">Learning Score</span>
+            <span class="card-icon-tag blue"><i class="fa-solid fa-brain"></i></span>
+          </div>
+          <div class="gauge-score-wrap">
+            <div class="svg-gauge-box">
+              <svg viewBox="0 0 36 36" class="circular-svg">
+                <path class="circle-track" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                <path class="circle-fill-score" id="dashboard-score-svg" stroke-dasharray="78, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+              </svg>
+              <div class="gauge-center-text">
+                <span class="gauge-value" id="dashboard-learning-score">78%</span>
+                <span class="gauge-caption">Proficiency</span>
+              </div>
+            </div>
+            <div class="gauge-details">
+              <div class="delta-badge positive"><i class="fa-solid fa-arrow-trend-up"></i> +5.4% this week</div>
+              <p class="delta-caption">Calibrated across recent quizzes & solved doubts.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Exam Countdown -->
+        <div class="summary-card">
+          <div class="card-top-row">
+            <span class="card-title-lbl">Exam Countdown</span>
+            <span class="card-icon-tag amber"><i class="fa-solid fa-hourglass-half"></i></span>
+          </div>
+          <div class="countdown-digit-boxes">
+            <div class="digit-box">
+              <span class="digit-val" id="cd-days">12</span>
+              <span class="digit-unit">Days</span>
+            </div>
+            <span class="colon">:</span>
+            <div class="digit-box">
+              <span class="digit-val" id="cd-hours">14</span>
+              <span class="digit-unit">Hours</span>
+            </div>
+            <span class="colon">:</span>
+            <div class="digit-box">
+              <span class="digit-val" id="cd-mins">28</span>
+              <span class="digit-unit">Mins</span>
+            </div>
+          </div>
+          <div class="target-exam-lbl">
+            <i class="fa-solid fa-calendar-check"></i> Target: CBSE Board Finals 2026
+          </div>
+        </div>
+
+        <!-- Card 3: Weak Topics Identified -->
+        <div class="summary-card">
+          <div class="card-top-row">
+            <span class="card-title-lbl">Weak Topics Detected</span>
+            <span class="card-icon-tag rose"><i class="fa-solid fa-triangle-exclamation"></i></span>
+          </div>
+          <div class="weak-topics-summary">
+            <div class="big-counter text-rose" id="weak-topics-count">3</div>
+            <div class="counter-explanation">
+              <strong>High Priority Concepts</strong> needing immediate revision before test day.
+            </div>
+          </div>
+          <button class="btn-text-action" onclick="app.scrollToWeakTopics()">
+            View & Fix with AI <i class="fa-solid fa-arrow-down"></i>
+          </button>
+        </div>
+
+        <!-- Card 4: Study Momentum -->
+        <div class="summary-card">
+          <div class="card-top-row">
+            <span class="card-title-lbl">Study Momentum</span>
+            <span class="card-icon-tag emerald"><i class="fa-solid fa-fire"></i></span>
+          </div>
+          <div class="momentum-summary">
+            <div class="big-counter text-emerald">24.5 <span class="counter-unit">hrs</span></div>
+            <div class="momentum-bar-wrap">
+              <div class="streak-tag-line"><i class="fa-solid fa-bolt text-amber"></i> 7-Day Streak Active</div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 82%;"></div>
+              </div>
+              <span class="bar-caption">82% of weekly 30h study goal</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Dashboard 2-Column Layout -->
+      <div class="dashboard-columns-grid">
+        <!-- Left Column: Weak Topics & Today's Tasks -->
+        <div class="dash-col">
+          <!-- Weak Topics Section -->
+          <div class="content-panel" id="weak-topics-panel">
+            <div class="panel-header-row">
+              <div>
+                <h3 class="panel-title"><i class="fa-solid fa-triangle-exclamation text-rose"></i> Weak Topics & Learning Gaps</h3>
+                <p class="panel-subtitle">AI-detected conceptual roadblocks based on quiz errors.</p>
+              </div>
+              <span class="badge-urgent">Action Required</span>
+            </div>
+
+            <div class="weak-topics-list-container" id="weak-topics-container">
+              <!-- Injected by JavaScript -->
+            </div>
+          </div>
+
+          <!-- Today's Tasks Checklist -->
+          <div class="content-panel">
+            <div class="panel-header-row">
+              <div>
+                <h3 class="panel-title"><i class="fa-solid fa-list-check gradient-text"></i> Today's Adaptive Tasks</h3>
+                <p class="panel-subtitle">Dynamically prioritized by AI based on weak areas.</p>
+              </div>
+              <button class="btn-outline-sm" onclick="app.addNewTaskPrompt()"><i class="fa-solid fa-plus"></i> Add Task</button>
+            </div>
+
+            <div class="tasks-checklist-container" id="today-tasks-container">
+              <!-- Injected by JavaScript -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Charts & Quick Doubt Solver -->
+        <div class="dash-col">
+          <!-- Subject Mastery Chart -->
+          <div class="content-panel">
+            <div class="panel-header-row">
+              <div>
+                <h3 class="panel-title"><i class="fa-solid fa-chart-line text-blue"></i> Subject Proficiency</h3>
+                <p class="panel-subtitle">Live accuracy percentage across key subjects.</p>
+              </div>
+              <span class="badge-subtle">Auto-updates</span>
+            </div>
+            <div class="chart-container-box">
+              <canvas id="subjectMasteryChart" height="200"></canvas>
+            </div>
+          </div>
+
+          <!-- Weekly Hours Distribution Chart -->
+          <div class="content-panel">
+            <div class="panel-header-row">
+              <div>
+                <h3 class="panel-title"><i class="fa-solid fa-chart-column text-emerald"></i> Weekly Study Distribution</h3>
+                <p class="panel-subtitle">Daily focused hours vs target benchmark.</p>
+              </div>
+            </div>
+            <div class="chart-container-box">
+              <canvas id="weeklyHoursChart" height="180"></canvas>
+            </div>
+          </div>
+
+          <!-- Quick Doubt Solver Launcher -->
+          <div class="quick-doubt-card">
+            <div class="quick-doubt-header">
+              <div class="ai-avatar-sm"><i class="fa-solid fa-robot"></i></div>
+              <div>
+                <h4>Stuck on a tricky concept?</h4>
+                <p>Ask StudyMate AI for instant step-by-step breakdown.</p>
+              </div>
+            </div>
+            <div class="quick-input-row">
+              <input type="text" id="dash-quick-doubt-input" placeholder="e.g. Explain Newton's 3rd Law or integration by parts..." onkeypress="app.handleDashQuickDoubtKey(event)" />
+              <button class="btn-primary-sm" onclick="app.handleDashQuickDoubt()"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- MODULE 3: AI TUTOR & LIVE DOUBT SOLVER -->
+    <!-- ========================================================================= -->
+    <section id="tab-ai-tutor" class="tab-pane">
+      <div class="page-header-row">
+        <div>
+          <h1 class="page-heading"><i class="fa-solid fa-robot gradient-text"></i> AI Tutor & Instant Doubt Solver</h1>
+          <p class="page-subheading">Instant conceptual explanations, step-by-step derivations, multilingual support, and voice narration.</p>
+        </div>
+
+        <div class="tutor-top-controls">
+          <!-- Language Selector -->
+          <div class="control-field">
+            <label for="language-select"><i class="fa-solid fa-language text-blue"></i> Language:</label>
+            <select id="language-select" class="select-input-sm" onchange="app.changeTutorLanguage()">
+              <option value="English">English</option>
+              <option value="Hindi">हिन्दी (Hindi)</option>
+              <option value="Hinglish">Hinglish</option>
+              <option value="Tamil">தமிழ் (Tamil)</option>
+              <option value="Bengali">বাংলা (Bengali)</option>
+              <option value="Telugu">తెలుగు (Telugu)</option>
+              <option value="Marathi">मराठी (Marathi)</option>
+            </select>
+          </div>
+
+          <!-- Explanation Modes -->
+          <div class="mode-pill-container">
+            <button class="mode-pill-btn active" data-mode="instant" onclick="app.setTutorMode('instant')">
+              <i class="fa-solid fa-bolt"></i> Instant Exam Answer
+            </button>
+            <button class="mode-pill-btn" data-mode="eli10" onclick="app.setTutorMode('eli10')">
+              <i class="fa-solid fa-baby"></i> Explain Like I'm 10
+            </button>
+            <button class="mode-pill-btn" data-mode="stepbystep" onclick="app.setTutorMode('stepbystep')">
+              <i class="fa-solid fa-list-ol"></i> Step-by-Step Proof
+            </button>
+            <button class="mode-pill-btn" data-mode="deep" onclick="app.setTutorMode('deep')">
+              <i class="fa-solid fa-microscope"></i> Concept Deep Dive
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Chat Layout: Sidebar + Chat Thread -->
+      <div class="tutor-chat-grid">
+        <!-- Sidebar: Presets & Weak Topics -->
+        <div class="tutor-sidebar-box">
+          <div class="sidebar-section">
+            <h4 class="sidebar-title"><i class="fa-solid fa-fire text-amber"></i> Popular Exam Doubts</h4>
+            <div class="preset-prompts-list">
+              <button class="preset-prompt-btn" onclick="app.sendPresetDoubt('Explain Newton\'s Third Law of Motion with real-life examples and formula')">
+                <i class="fa-solid fa-atom text-blue"></i> Newton's Third Law
+              </button>
+              <button class="preset-prompt-btn" onclick="app.sendPresetDoubt('Derive the Quadratic Formula from ax^2 + bx + c = 0 step by step')">
+                <i class="fa-solid fa-square-root-variable text-emerald"></i> Quadratic Formula Proof
+              </button>
+              <button class="preset-prompt-btn" onclick="app.sendPresetDoubt('Explain SN1 vs SN2 reaction mechanisms in Organic Chemistry with differences')">
+                <i class="fa-solid fa-flask-vial text-rose"></i> SN1 vs SN2 Mechanisms
+              </button>
+              <button class="preset-prompt-btn" onclick="app.sendPresetDoubt('What is Integration by Parts and how do I choose u and dv (ILATE rule)?')">
+                <i class="fa-solid fa-calculator text-purple"></i> Integration by Parts (ILATE)
+              </button>
+              <button class="preset-prompt-btn" onclick="app.sendPresetDoubt('Explain Ohm\'s Law and why resistance depends on temperature and length')">
+                <i class="fa-solid fa-bolt-lightning text-amber"></i> Ohm's Law & Resistance
+              </button>
+              <button class="preset-prompt-btn" onclick="app.sendPresetDoubt('Explain the Light and Dark reactions of Photosynthesis simply')">
+                <i class="fa-solid fa-seedling text-emerald"></i> Photosynthesis Reactions
+              </button>
+            </div>
+          </div>
+
+          <div class="sidebar-section">
+            <h4 class="sidebar-title"><i class="fa-solid fa-triangle-exclamation text-rose"></i> Your Weak Topics Direct Links</h4>
+            <div class="weak-links-container" id="tutor-weak-links">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <div class="sidebar-info-card">
+            <div class="ai-status-row"><span class="status-dot online"></span> AI Model Active</div>
+            <p>Powered by Gemini AI reasoning with step validation and audio playback.</p>
+            <button class="btn-clear-chat" onclick="app.clearChat()"><i class="fa-solid fa-trash-can"></i> Clear Thread</button>
+          </div>
+        </div>
+
+        <!-- Chat Main Thread -->
+        <div class="tutor-chat-main-card">
+          <!-- Messages Stream -->
+          <div class="chat-thread-container" id="chat-messages">
+            <div class="chat-message ai-message">
+              <div class="msg-avatar"><i class="fa-solid fa-robot"></i></div>
+              <div class="msg-content-box">
+                <div class="msg-header">
+                  <span class="msg-sender">StudyMate AI Teacher</span>
+                  <span class="msg-timestamp">Just now</span>
+                </div>
+                <div class="msg-text-body">
+                  <p>👋 Hello Aarav! I am your <strong>24/7 AI Personal Teacher</strong>.</p>
+                  <p>Stuck on a difficult concept, complicated equation, or tricky theorem? Ask me anything! You can speak via your microphone, type any doubt, switch modes (e.g. <em>Explain Like I'm 10</em> or <em>Step-by-Step</em>), or click any prompt on the left.</p>
+                </div>
+                <div class="msg-footer-actions">
+                  <button class="msg-action-btn" onclick="app.speakMessage(this)"><i class="fa-solid fa-volume-high"></i> Listen</button>
+                  <button class="msg-action-btn" onclick="app.copyMessageText(this)"><i class="fa-solid fa-copy"></i> Copy</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chat Input Bar -->
+          <div class="chat-input-bar">
+            <div class="input-controls-row">
+              <span class="mode-label" id="current-mode-indicator"><i class="fa-solid fa-bolt text-blue"></i> Mode: <strong>Instant Exam Answer</strong></span>
+              <div class="input-tools-group">
+                <button class="btn-tool-tag" onclick="app.insertFormulaTemplate()"><i class="fa-solid fa-square-root-variable"></i> Math Equation</button>
+                <button class="btn-tool-tag" onclick="app.simulateImageUpload()"><i class="fa-solid fa-camera"></i> Scan Question</button>
+              </div>
+            </div>
+
+            <div class="input-row-main">
+              <!-- Voice Recognition Button -->
+              <button class="btn-mic-input" id="btn-voice-mic" onclick="app.toggleVoiceRecognition()" title="Click to speak your doubt">
+                <i class="fa-solid fa-microphone"></i>
+              </button>
+
+              <textarea id="tutor-user-input" placeholder="Type your doubt or equation here (e.g., 'Explain Newton's Third Law with examples')..." rows="2" onkeydown="app.handleChatKeyDown(event)"></textarea>
+
+              <button class="btn-send-message" id="btn-send-chat" onclick="app.sendUserDoubt()">
+                <i class="fa-solid fa-paper-plane"></i>
+              </button>
+            </div>
+
+            <div class="input-hint-row">
+              <span id="voice-indicator-status">Press <kbd>Enter</kbd> to ask • <kbd>Shift + Enter</kbd> for new line</span>
+              <span id="speech-status"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- MODULE 4: SMART STUDY PLANNER -->
+    <!-- ========================================================================= -->
+    <section id="tab-planner" class="tab-pane">
+      <div class="page-header-row">
+        <div>
+          <h1 class="page-heading"><i class="fa-solid fa-calendar-check gradient-text"></i> Smart Study Planner</h1>
+          <p class="page-subheading">Automated, adaptive weekly timetable tailored dynamically to your weak areas and exam priorities.</p>
+        </div>
+        <div class="planner-actions-top">
+          <button class="btn-primary-sm" onclick="app.regeneratePlanPrompt()"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Re-Optimize Plan</button>
+          <button class="btn-outline-sm" onclick="app.exportToCalendar()"><i class="fa-solid fa-calendar-arrow-down"></i> Export to iCal</button>
+          <button class="btn-outline-sm" onclick="window.print()"><i class="fa-solid fa-print"></i> Print Plan</button>
+        </div>
+      </div>
+
+      <!-- Planner Parameters Bar -->
+      <div class="planner-settings-card">
+        <div class="setting-item">
+          <label><i class="fa-solid fa-calendar-day text-blue"></i> Target Exam Date:</label>
+          <input type="date" id="plan-exam-date" value="2026-09-10" onchange="app.updatePlannerSchedule()" />
+        </div>
+        <div class="setting-item">
+          <label><i class="fa-solid fa-clock text-amber"></i> Daily Study Budget:</label>
+          <select id="plan-daily-hours" onchange="app.updatePlannerSchedule()" class="select-input-sm">
+            <option value="3">3.0 Hours / Day (Light)</option>
+            <option value="4.5" selected>4.5 Hours / Day (Optimal)</option>
+            <option value="6">6.0 Hours / Day (Intensive)</option>
+            <option value="8">8.0 Hours / Day (Crash Course)</option>
+          </select>
+        </div>
+        <div class="setting-item">
+          <label><i class="fa-solid fa-scale-balanced text-purple"></i> Strategy Focus:</label>
+          <select id="plan-focus-mode" onchange="app.updatePlannerSchedule()" class="select-input-sm">
+            <option value="weak" selected>Target Weak Topics First (Recommended)</option>
+            <option value="balanced">Equal Subject Distribution</option>
+            <option value="mocks">Mock Test & Revision Heavy</option>
+          </select>
+        </div>
+        <button class="btn-primary-sm" onclick="app.generateAISchedule()"><i class="fa-solid fa-arrows-rotate"></i> Recalibrate Schedule</button>
+      </div>
+
+      <!-- Main Planner Grid: Timetable + Pomodoro Focus Timer -->
+      <div class="planner-main-grid">
+        <!-- Left: Interactive Timetable -->
+        <div class="planner-left-col">
+          <div class="timetable-card-box">
+            <div class="timetable-header-row">
+              <h3 class="panel-title"><i class="fa-solid fa-calendar-week text-blue"></i> Adaptive Weekly Schedule</h3>
+              <div class="day-tabs-group" id="day-filter-tabs">
+                <button class="day-tab active" data-day="all" onclick="app.filterPlannerDay('all')">ALL</button>
+                <button class="day-tab" data-day="Mon" onclick="app.filterPlannerDay('Mon')">MON</button>
+                <button class="day-tab" data-day="Tue" onclick="app.filterPlannerDay('Tue')">TUE</button>
+                <button class="day-tab" data-day="Wed" onclick="app.filterPlannerDay('Wed')">WED</button>
+                <button class="day-tab" data-day="Thu" onclick="app.filterPlannerDay('Thu')">THU</button>
+                <button class="day-tab" data-day="Fri" onclick="app.filterPlannerDay('Fri')">FRI</button>
+                <button class="day-tab" data-day="Sat" onclick="app.filterPlannerDay('Sat')">SAT</button>
+                <button class="day-tab" data-day="Sun" onclick="app.filterPlannerDay('Sun')">SUN</button>
+              </div>
+            </div>
+
+            <div class="timetable-slots-list" id="timetable-slots-container">
+              <!-- Dynamically populated by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Pomodoro Timer & Milestones -->
+        <div class="planner-right-col">
+          <!-- Pomodoro Timer Card -->
+          <div class="pomodoro-timer-card glow-card">
+            <div class="pomodoro-badge"><i class="fa-solid fa-bullseye"></i> Focus Mode</div>
+            <h4>Smart Pomodoro Timer</h4>
+            <p>25 min deep study • 5 min brain refresh</p>
+
+            <div class="timer-display-wrap">
+              <svg viewBox="0 0 100 100" class="timer-svg-gauge">
+                <circle cx="50" cy="50" r="44" class="timer-track"></circle>
+                <circle cx="50" cy="50" r="44" class="timer-progress-fill" id="pomodoro-progress-ring"></circle>
+              </svg>
+              <div class="timer-center-digits">
+                <span class="timer-digits-text" id="timer-display">25:00</span>
+                <span class="timer-mode-lbl" id="timer-mode-label">Deep Study</span>
+              </div>
+            </div>
+
+            <div class="timer-buttons-row">
+              <button class="btn-timer-ctrl primary" id="btn-timer-toggle" onclick="app.togglePomodoro()">
+                <i class="fa-solid fa-play" id="timer-play-icon"></i> Start Session
+              </button>
+              <button class="btn-timer-ctrl secondary" onclick="app.resetPomodoro()">
+                <i class="fa-solid fa-rotate-left"></i> Reset
+              </button>
+            </div>
+
+            <div class="active-session-box">
+              <span class="active-session-label">Active Session:</span>
+              <strong id="active-pomo-task">Physics - Rotational Dynamics (Weak Topic)</strong>
+            </div>
+          </div>
+
+          <!-- Milestones & Streaks -->
+          <div class="content-panel milestone-panel">
+            <h4 class="panel-title"><i class="fa-solid fa-medal text-amber"></i> Study Milestones</h4>
+            <div class="milestone-item achieved">
+              <div class="milestone-icon text-amber"><i class="fa-solid fa-fire"></i></div>
+              <div>
+                <strong>7-Day Consistency Master</strong>
+                <p>Studied without dropping a day for 7 straight days</p>
+              </div>
+              <span class="xp-badge">+150 XP</span>
+            </div>
+            <div class="milestone-item achieved">
+              <div class="milestone-icon text-blue"><i class="fa-solid fa-circle-check"></i></div>
+              <div>
+                <strong>10 Doubts Resolved</strong>
+                <p>Cleared 10 conceptual hurdles via AI Tutor</p>
+              </div>
+              <span class="xp-badge">+100 XP</span>
+            </div>
+            <div class="milestone-item">
+              <div class="milestone-icon text-purple"><i class="fa-solid fa-award"></i></div>
+              <div>
+                <strong>Readiness Over 90%</strong>
+                <p>Boost full mock readiness above 90%</p>
+              </div>
+              <span class="xp-badge locked"><i class="fa-solid fa-lock"></i> +300 XP</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- MODULE 5: INTERACTIVE FLASHCARDS & SPACED REPETITION -->
+    <!-- ========================================================================= -->
+    <section id="tab-flashcards" class="tab-pane">
+      <div class="page-header-row">
+        <div>
+          <h1 class="page-heading"><i class="fa-solid fa-clone gradient-text"></i> Interactive AI Flashcards</h1>
+          <p class="page-subheading">Accelerate memory retention with active recall and the Leitner spaced repetition system.</p>
+        </div>
+        <div class="flashcard-actions-top">
+          <button class="btn-primary-sm" onclick="app.generateCustomFlashcardPrompt()">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> AI Generate Deck
+          </button>
+        </div>
+      </div>
+
+      <!-- Flashcard Deck Selector Bar -->
+      <div class="flashcard-deck-bar">
+        <button class="deck-btn active" data-deck="all" onclick="app.switchFlashcardDeck('all')">
+          <i class="fa-solid fa-layer-group"></i> All Decks (<span id="fc-total-count">12</span>)
+        </button>
+        <button class="deck-btn" data-deck="physics" onclick="app.switchFlashcardDeck('physics')">
+          <i class="fa-solid fa-atom text-blue"></i> Physics
+        </button>
+        <button class="deck-btn" data-deck="math" onclick="app.switchFlashcardDeck('math')">
+          <i class="fa-solid fa-calculator text-emerald"></i> Math
+        </button>
+        <button class="deck-btn" data-deck="chem" onclick="app.switchFlashcardDeck('chem')">
+          <i class="fa-solid fa-flask-vial text-rose"></i> Chemistry
+        </button>
+        <button class="deck-btn" data-deck="weak" onclick="app.switchFlashcardDeck('weak')">
+          <i class="fa-solid fa-triangle-exclamation text-amber"></i> Weak Topics Only
+        </button>
+      </div>
+
+      <!-- Interactive 3D Flashcard Presentation Area -->
+      <div class="flashcard-viewport">
+        <div class="flashcard-stage">
+          <div class="flashcard-3d-card" id="active-flashcard" onclick="app.flipFlashcard()">
+            <div class="card-face card-front">
+              <div class="card-badge" id="fc-subject-badge">PHYSICS</div>
+              <div class="card-prompt" id="fc-front-text">What is the Moment of Inertia of a solid sphere of mass M and radius R about its diameter?</div>
+              <div class="card-hint-text"><i class="fa-solid fa-rotate"></i> Click or tap card to flip for answer</div>
+            </div>
+            <div class="card-face card-back">
+              <div class="card-badge success">SOLUTION & DERIVATION</div>
+              <div class="card-answer-text" id="fc-back-text">
+                $$I = \frac{2}{5}MR^2$$
+                <p style="margin-top: 10px; font-size: 0.88rem; color: var(--text-secondary);">
+                  Derived by integrating concentric thin spherical shells over the volume of the sphere.
+                </p>
+              </div>
+              <div class="card-hint-text"><i class="fa-solid fa-rotate"></i> Click to flip back</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Spaced Repetition Controls -->
+        <div class="spaced-repetition-controls">
+          <div class="fc-counter-text" id="fc-progress-counter">Card 1 of 12</div>
+          <div class="fc-rating-buttons">
+            <button class="btn-fc-rating hard" onclick="app.rateFlashcard('hard')">
+              <i class="fa-solid fa-brain"></i> Hard (Repeat Soon)
+            </button>
+            <button class="btn-fc-rating good" onclick="app.rateFlashcard('good')">
+              <i class="fa-solid fa-thumbs-up"></i> Good (Normal Recall)
+            </button>
+            <button class="btn-fc-rating easy" onclick="app.rateFlashcard('easy')">
+              <i class="fa-solid fa-circle-check"></i> Mastered (+10 XP)
+            </button>
+          </div>
+          <div class="fc-nav-row">
+            <button class="btn-outline-sm" onclick="app.prevFlashcard()"><i class="fa-solid fa-arrow-left"></i> Previous</button>
+            <button class="btn-outline-sm" onclick="app.nextFlashcard()">Next Card <i class="fa-solid fa-arrow-right"></i></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- MODULE 6: FORMULA & CONSTANT VAULT -->
+    <!-- ========================================================================= -->
+    <section id="tab-formulas" class="tab-pane">
+      <div class="page-header-row">
+        <div>
+          <h1 class="page-heading"><i class="fa-solid fa-square-root-variable gradient-text"></i> Formula & Constant Vault</h1>
+          <p class="page-subheading">Instant searchable formula cards across Physics, Mathematics, and Chemistry with 1-click derivations.</p>
+        </div>
+        <div class="formula-search-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="formula-search-input" placeholder="Search formulas (e.g., Moment of Inertia, Integration, Gibbs Free Energy)..." oninput="app.searchFormulas()" />
+        </div>
+      </div>
+
+      <!-- Formula Grid -->
+      <div class="formulas-category-grid" id="formulas-container">
+        <!-- Injected via JavaScript -->
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- MODULE 7: EXAM STRESS RELIEF & MINDFULNESS ENGINE -->
+    <!-- ========================================================================= -->
+    <section id="tab-stress-relief" class="tab-pane">
+      <div class="page-header-row">
+        <div>
+          <h1 class="page-heading"><i class="fa-solid fa-spa text-emerald"></i> Exam Stress Reliever & Mind Reset</h1>
+          <p class="page-subheading">Addressing the core problem of exam anxiety with science-backed 4-7-8 breathing and ambient cognitive flow soundscapes.</p>
+        </div>
+      </div>
+
+      <div class="stress-relief-grid">
+        <!-- 4-7-8 Breathing Circle Box -->
+        <div class="content-panel text-center">
+          <div class="badge-sih-gold" style="margin-bottom: 12px;"><i class="fa-solid fa-heart-pulse"></i> Science-Backed 4-7-8 Technique</div>
+          <h3>Box Breathing Visualizer</h3>
+          <p class="panel-subtitle" style="margin-bottom: 24px;">Lowers heart rate, reduces cortisol, and restores clear cognitive focus before exams.</p>
+
+          <div class="breathing-circle-container">
+            <div class="breathing-circle-outer" id="breathing-anim-circle">
+              <div class="breathing-circle-inner">
+                <span class="breathing-stage-text" id="breath-stage-text">Inhale</span>
+                <span class="breathing-timer-text" id="breath-timer-text">4s</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="breathing-controls-row">
+            <button class="btn-hero-primary" id="btn-breathing-toggle" onclick="app.toggleBreathingExercise()">
+              <i class="fa-solid fa-play" id="breathing-icon"></i> Start Breathing Session
+            </button>
+          </div>
+        </div>
+
+        <!-- Ambient Soundscapes & Mind Affirmations -->
+        <div class="content-panel">
+          <h3 class="panel-title"><i class="fa-solid fa-headphones text-blue"></i> Ambient Cognitive Soundscapes</h3>
+          <p class="panel-subtitle" style="margin-bottom: 18px;">Pure Web Audio frequency synthesizer for flow state and calm focus.</p>
+
+          <div class="soundscapes-list">
+            <div class="soundscape-item">
+              <div class="sound-icon blue"><i class="fa-solid fa-wave-square"></i></div>
+              <div class="sound-meta">
+                <strong>432Hz Binaural Alpha Flow</strong>
+                <p>Induces 10Hz alpha waves for deep memory consolidation</p>
+              </div>
+              <button class="btn-xs-primary" id="btn-binaural-flow" onclick="app.toggleBinauralWaves()">
+                <i class="fa-solid fa-play"></i> Play Sound
+              </button>
+            </div>
+
+            <div class="soundscape-item">
+              <div class="sound-icon emerald"><i class="fa-solid fa-cloud-rain"></i></div>
+              <div class="sound-meta">
+                <strong>Gentle Rainfall White Noise</strong>
+                <p>Blocks environmental distractions and calms rapid thoughts</p>
+              </div>
+              <button class="btn-xs-secondary" onclick="app.playAmbientPreset('rain')">
+                <i class="fa-solid fa-play"></i> Play
+              </button>
+            </div>
+
+            <div class="soundscape-item">
+              <div class="sound-icon purple"><i class="fa-solid fa-wind"></i></div>
+              <div class="sound-meta">
+                <strong>Brownian Deep Noise</strong>
+                <p>Low-frequency rumble proven to boost ADHD and deep exam focus</p>
+              </div>
+              <button class="btn-xs-secondary" onclick="app.playAmbientPreset('brown')">
+                <i class="fa-solid fa-play"></i> Play
+              </button>
+            </div>
+          </div>
+
+          <!-- Mind Affirmation Box -->
+          <div class="affirmation-card" style="margin-top: 20px;">
+            <div class="aff-quote-icon"><i class="fa-solid fa-quote-left text-emerald"></i></div>
+            <p id="daily-affirmation-text">
+              "Exams test your preparation, not your intelligence. One step at a time, you have the knowledge and clarity to succeed."
+            </p>
+            <button class="btn-text-action" onclick="app.refreshAffirmation()">
+              <i class="fa-solid fa-arrows-rotate"></i> Next Calming Thought
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- MODULE 8: EXAM READINESS & AI MOCK QUIZ ENGINE -->
+    <!-- ========================================================================= -->
+    <section id="tab-readiness" class="tab-pane">
+      <div class="page-header-row">
+        <div>
+          <h1 class="page-heading"><i class="fa-solid fa-bullseye gradient-text"></i> Exam Readiness & AI Mock Tests</h1>
+          <p class="page-subheading">Predictive analytics driving mock test performance, target improvement tips, and a clear data-backed readiness index.</p>
+        </div>
+        <button class="btn-hero-primary" onclick="app.startMockQuizModal()">
+          <i class="fa-solid fa-play"></i> Launch AI Mock Quiz
+        </button>
+      </div>
+
+      <!-- Readiness Master Summary Card -->
+      <div class="readiness-master-card glow-card">
+        <div class="readiness-summary-left">
+          <span class="badge-readiness-label"><i class="fa-solid fa-brain"></i> Predictive Readiness Index</span>
+          <div class="readiness-score-number" id="readiness-big-percentage">85%</div>
+          <div class="readiness-status-tag high">
+            <i class="fa-solid fa-circle-check"></i> High Exam Confidence (Target Reached)
+          </div>
+          <p class="readiness-meta-text">
+            Based on adaptive mock simulations, question difficulty calibrations, and memory retention curves.
+          </p>
+        </div>
+
+        <div class="readiness-summary-right">
+          <!-- Meter Bar -->
+          <div class="readiness-track-box">
+            <div class="track-labels-row">
+              <span>0% (Critical)</span>
+              <span>50% (Passing)</span>
+              <span>75% (Target)</span>
+              <span>100% (Distinction)</span>
+            </div>
+            <div class="readiness-progress-track">
+              <div class="readiness-progress-fill" id="readiness-meter-fill" style="width: 85%;"></div>
+              <div class="readiness-marker" style="left: 85%;" title="Current: 85%"></div>
+            </div>
+          </div>
+
+          <!-- Stats Chips -->
+          <div class="readiness-stats-grid">
+            <div class="stat-chip">
+              <span class="chip-label">Syllabus Covered</span>
+              <strong class="chip-val text-emerald">88%</strong>
+            </div>
+            <div class="stat-chip">
+              <span class="chip-label">Average Accuracy</span>
+              <strong class="chip-val text-blue">82.4%</strong>
+            </div>
+            <div class="stat-chip">
+              <span class="chip-label">Avg Solve Speed</span>
+              <strong class="chip-val text-amber">1.2m / Q</strong>
+            </div>
+            <div class="stat-chip">
+              <span class="chip-label">Tests Completed</span>
+              <strong class="chip-val text-purple" id="tests-completed-count">18 Mocks</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Subject Breakdown & Actionable Tips -->
+      <div class="readiness-columns-grid">
+        <!-- Subject Competency Progress Bars -->
+        <div class="content-panel">
+          <div class="panel-header-row">
+            <div>
+              <h3 class="panel-title"><i class="fa-solid fa-layer-group text-blue"></i> Subject-Wise Mastery</h3>
+              <p class="panel-subtitle">Granular performance indicators per discipline.</p>
+            </div>
+          </div>
+
+          <div class="subject-bars-list" id="subject-readiness-bars">
+            <!-- Physics -->
+            <div class="subject-progress-row">
+              <div class="row-meta">
+                <span class="sub-title"><i class="fa-solid fa-atom text-blue"></i> Physics</span>
+                <span class="sub-percent text-rose">74% <span class="badge-warn">Attention</span></span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill physics" style="width: 74%;"></div>
+              </div>
+              <div class="sub-note">Weak: Rotational Dynamics & Lenz's Law</div>
+            </div>
+
+            <!-- Math -->
+            <div class="subject-progress-row">
+              <div class="row-meta">
+                <span class="sub-title"><i class="fa-solid fa-calculator text-emerald"></i> Mathematics</span>
+                <span class="sub-percent text-emerald">88% <span class="badge-good">Strong</span></span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill math" style="width: 88%;"></div>
+              </div>
+              <div class="sub-note">Weak: Integration by Parts</div>
+            </div>
+
+            <!-- Chemistry -->
+            <div class="subject-progress-row">
+              <div class="row-meta">
+                <span class="sub-title"><i class="fa-solid fa-flask-vial text-rose"></i> Chemistry</span>
+                <span class="sub-percent text-amber">81% <span class="badge-good">Good</span></span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill chem" style="width: 81%;"></div>
+              </div>
+              <div class="sub-note">Weak: SN1/SN2 Reaction Mechanisms</div>
+            </div>
+
+            <!-- Computer Science / Bio -->
+            <div class="subject-progress-row">
+              <div class="row-meta">
+                <span class="sub-title"><i class="fa-solid fa-laptop-code text-purple"></i> Computer Science / Biology</span>
+                <span class="sub-percent text-purple">94% <span class="badge-master">Mastered</span></span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill cs" style="width: 94%;"></div>
+              </div>
+              <div class="sub-note">Mastered: Algorithms & Logic Gates</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Diagnostic Improvement Recommendations -->
+        <div class="content-panel">
+          <div class="panel-header-row">
+            <div>
+              <h3 class="panel-title"><i class="fa-solid fa-lightbulb text-amber"></i> AI Diagnostic Improvement Tips</h3>
+              <p class="panel-subtitle">Targeted action items to raise your score from 85% to 92%+.</p>
+            </div>
+          </div>
+
+          <div class="improvement-cards-list">
+            <div class="tip-card-item urgent">
+              <div class="tip-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+              <div class="tip-body">
+                <strong>Physics: Solve 5 Rotational Motion Numerical Problems</strong>
+                <p>You missed moment of inertia questions in 2 consecutive mock tests. Reviewing this will boost overall Physics readiness by <strong>+6%</strong>.</p>
+                <button class="btn-xs-primary" onclick="app.launchSubjectQuiz('physics')"><i class="fa-solid fa-play"></i> Practice Physics Quiz</button>
+              </div>
+            </div>
+
+            <div class="tip-card-item">
+              <div class="tip-icon text-blue"><i class="fa-solid fa-arrows-split-up-and-left"></i></div>
+              <div class="tip-body">
+                <strong>Chemistry: Review SN1 vs SN2 Reaction Mechanisms</strong>
+                <p>AI identified uncertainty with solvent polarity and stereochemistry inversion. Use AI Tutor concept simplification.</p>
+                <button class="btn-xs-secondary" onclick="app.sendPresetDoubt('Explain SN1 vs SN2 reaction mechanisms with stereochemistry examples')"><i class="fa-solid fa-robot"></i> Explain SN1/SN2</button>
+              </div>
+            </div>
+
+            <div class="tip-card-item positive">
+              <div class="tip-icon text-emerald"><i class="fa-solid fa-shield-halved"></i></div>
+              <div class="tip-body">
+                <strong>Maintain Strength: Mathematics Calculus</strong>
+                <p>92% accuracy in differentiation and limits. Maintain 15-minute weekly revision to keep memory fresh.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Topic-Wise Quiz Cards Grid -->
+      <div class="content-section">
+        <div class="section-title-wrap text-center">
+          <span class="section-kicker">PRACTICE & DIAGNOSTIC ASSESSMENT</span>
+          <h2 class="section-heading">Topic-Wise AI Quizzes</h2>
+          <p class="section-subtext">Select a topic below to launch an instant adaptive mock quiz. Errors will automatically update your Weak Topics on the Dashboard.</p>
+        </div>
+
+        <div class="quiz-launcher-grid">
+          <!-- Quiz 1: Physics -->
+          <div class="quiz-card-item">
+            <div class="quiz-card-top physics"><i class="fa-solid fa-atom"></i></div>
+            <h4>Physics: Mechanics & Laws</h4>
+            <div class="quiz-card-meta">
+              <span><i class="fa-solid fa-list-ol"></i> 5 Questions</span>
+              <span><i class="fa-solid fa-clock"></i> 5 Mins</span>
+              <span class="diff-tag medium">Medium</span>
+            </div>
+            <p>Newton's Laws, Friction, Rotational Dynamics, Work & Energy.</p>
+            <button class="btn-primary-block" onclick="app.startQuiz('physics')">Start Physics Quiz</button>
+          </div>
+
+          <!-- Quiz 2: Math -->
+          <div class="quiz-card-item">
+            <div class="quiz-card-top math"><i class="fa-solid fa-calculator"></i></div>
+            <h4>Mathematics: Calculus & Algebra</h4>
+            <div class="quiz-card-meta">
+              <span><i class="fa-solid fa-list-ol"></i> 5 Questions</span>
+              <span><i class="fa-solid fa-clock"></i> 6 Mins</span>
+              <span class="diff-tag hard">Advanced</span>
+            </div>
+            <p>Integration by parts, Quadratic roots, Limits & Continuity.</p>
+            <button class="btn-primary-block" onclick="app.startQuiz('math')">Start Math Quiz</button>
+          </div>
+
+          <!-- Quiz 3: Chemistry -->
+          <div class="quiz-card-item">
+            <div class="quiz-card-top chemistry"><i class="fa-solid fa-flask-vial"></i></div>
+            <h4>Chemistry: Organic & Physical</h4>
+            <div class="quiz-card-meta">
+              <span><i class="fa-solid fa-list-ol"></i> 5 Questions</span>
+              <span><i class="fa-solid fa-clock"></i> 5 Mins</span>
+              <span class="diff-tag medium">Medium</span>
+            </div>
+            <p>Reaction mechanisms, Thermodynamics, Chemical Equilibrium.</p>
+            <button class="btn-primary-block" onclick="app.startQuiz('chemistry')">Start Chem Quiz</button>
+          </div>
+
+          <!-- Quiz 4: Full Grand Mock -->
+          <div class="quiz-card-item grand-mock">
+            <div class="quiz-card-top cs"><i class="fa-solid fa-brain"></i></div>
+            <h4>Full SIH Grand Mock Test</h4>
+            <div class="quiz-card-meta">
+              <span><i class="fa-solid fa-list-ol"></i> 6 Questions</span>
+              <span><i class="fa-solid fa-clock"></i> 6 Mins</span>
+              <span class="diff-tag all">Comprehensive</span>
+            </div>
+            <p>Multi-disciplinary combined assessment across all key disciplines.</p>
+            <button class="btn-accent-block" onclick="app.startQuiz('all')">Take Grand Mock</button>
+          </div>
+
+          <!-- Quiz 5: Custom AI Note-to-Quiz Generator -->
+          <div class="quiz-card-item custom-quiz-card">
+            <div class="quiz-card-top custom"><i class="fa-solid fa-wand-magic-sparkles text-amber"></i></div>
+            <h4>AI Note-to-Quiz Generator</h4>
+            <div class="quiz-card-meta">
+              <span><i class="fa-solid fa-file-lines"></i> Any Syllabus Note</span>
+              <span class="diff-tag medium">Dynamic</span>
+            </div>
+            <p>Paste any textbook page, paragraph, or concept to generate an instant custom 5-question test!</p>
+            <button class="btn-primary-block" onclick="app.promptCustomNoteQuiz()"><i class="fa-solid fa-bolt"></i> Generate Custom Quiz</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: INTERACTIVE AI QUIZ ENGINE -->
+  <!-- ========================================================================= -->
+  <div class="modal-overlay" id="quiz-modal" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-box">
+          <span class="badge-subject" id="modal-quiz-subject-badge">PHYSICS</span>
+          <h3 id="modal-quiz-title">Adaptive Diagnostic Mock Quiz</h3>
+        </div>
+        <div class="modal-header-right">
+          <div class="quiz-timer-pill">
+            <i class="fa-solid fa-clock"></i> <span id="quiz-timer-text">05:00</span>
+          </div>
+          <button class="btn-close-modal" onclick="app.closeQuizModal()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+      </div>
+
+      <!-- Question View -->
+      <div class="modal-body" id="quiz-question-view">
+        <div class="quiz-progress-row">
+          <div class="progress-labels">
+            <span id="quiz-q-counter">Question 1 of 5</span>
+            <span id="quiz-q-difficulty" class="diff-badge">Medium</span>
+          </div>
+          <div class="quiz-progress-track">
+            <div class="quiz-progress-fill" id="quiz-progress-fill" style="width: 20%;"></div>
+          </div>
+        </div>
+
+        <div class="question-container">
+          <div class="question-text" id="quiz-question-text">
+            Loading question...
+          </div>
+          <div class="options-container" id="quiz-options-container">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- Live Instant Feedback -->
+        <div class="quiz-explanation-box" id="quiz-explanation-box" style="display: none;">
+          <div class="exp-header" id="exp-status-header">
+            <i class="fa-solid fa-circle-check text-emerald"></i> <strong>Correct Answer!</strong>
+          </div>
+          <p id="quiz-explanation-text">Explanation details...</p>
+        </div>
+      </div>
+
+      <!-- Results View -->
+      <div class="modal-body" id="quiz-results-view" style="display: none;">
+        <div class="results-box text-center">
+          <div class="trophy-icon" id="results-icon"><i class="fa-solid fa-trophy"></i></div>
+          <h2 id="results-title">Mock Quiz Completed!</h2>
+          <p id="results-subtitle">Here is your comprehensive AI performance breakdown.</p>
+
+          <div class="results-score-pill">
+            <span class="res-score-number" id="results-score-num">4 / 5</span>
+            <span class="res-percent-text" id="results-percent">(80%)</span>
+          </div>
+
+          <div class="results-breakdown-grid">
+            <div class="res-stat-card">
+              <span class="stat-lbl">Accuracy</span>
+              <strong id="res-accuracy-val" class="text-emerald">80%</strong>
+            </div>
+            <div class="res-stat-card">
+              <span class="stat-lbl">Time Taken</span>
+              <strong id="res-time-val" class="text-blue">2m 45s</strong>
+            </div>
+            <div class="res-stat-card">
+              <span class="stat-lbl">Learning Score Change</span>
+              <strong id="res-score-change" class="text-emerald">+2.5%</strong>
+            </div>
+          </div>
+
+          <div class="results-adaptive-box" id="results-weak-box">
+            <h4><i class="fa-solid fa-wand-magic-sparkles text-blue"></i> AI Adaptive Update:</h4>
+            <p id="results-adaptive-msg">Great job! All core concepts demonstrated mastery. Your readiness score has been boosted.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-outline-sm" id="btn-quiz-prev" onclick="app.prevQuestion()" style="display: none;">Previous</button>
+        <button class="btn-primary-sm" id="btn-quiz-next" onclick="app.nextQuestion()">Next Question <i class="fa-solid fa-arrow-right"></i></button>
+        <button class="btn-hero-primary" id="btn-quiz-finish" onclick="app.finishQuizView()" style="display: none;">Done & Update Dashboard</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Footer -->
+  <footer class="footer-bar">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <div class="brand-logo-icon sm"><i class="fa-solid fa-brain"></i></div>
+        <span class="brand-title">STUDY<span class="gradient-text">MATE</span></span>
+        <span class="footer-tagline">• Smart India Hackathon (SIH 2025/2026) Project</span>
+      </div>
+      <div class="footer-meta">
+        <span>Team: <strong>Tech Titans</strong> • Problem Statement: <strong>SIH26201 (Smart Education)</strong></span>
+        <span>Built with HTML5, CSS3, JavaScript, Gemini AI Integration & Predictive Readiness Engine</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Main Application Script -->
+  <script src="app.js"></script>
+</body>
+</html>
